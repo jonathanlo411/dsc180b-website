@@ -55,4 +55,12 @@
     font-weight: bold;
     color: grey;
   }
+
+  /* Mobile */
+  @media only screen and (max-width: 1000px) {
+    a, a:visited {
+      width: 95%;
+      margin: 0.5em auto;
+    }
+  }
 </style>

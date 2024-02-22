@@ -102,6 +102,7 @@
   }
   section h2 {
     font-size: 2rem;
+    margin: 0.5rem 0;
   }
   section p {
     font-size: 1.1rem;
@@ -117,7 +118,11 @@
   }
   section .subheading span { 
     margin: 1rem;
+    text-align: center;
     color: grey;
+  }
+  a, a:visited {
+    color: var(--highlight);
   }
 
   /* Top Splash */
@@ -173,7 +178,7 @@
     font-size: 1.4rem;
     margin-top: 1rem;
   }
-  form input, input:focus {
+  form input, form input:focus {
     font-size: 1.2rem;
     padding: 1%;
     border-radius: 5px;
@@ -197,5 +202,41 @@
   }
 
   /* Mobile View */
+  @media only screen and (max-width: 1000px) {
+    /* Rework Main Styles */
+    section h2 {
+      font-size: 2.5rem;
+      text-align: center;
+    }
+    section p {
+      font-size: 1.2rem;
+    }
 
+    /* Rework Top Splash */
+    #bg h1 {
+      font-weight: bold;
+      font-size: 3rem;
+      text-shadow: 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, -2px 0 0 #000;
+      margin: 1rem;
+    }
+    #card-row {
+      flex-direction: column;
+      margin-top: 1rem;
+    }
+
+    /* Demo */
+    form {
+      width: 100%;
+      padding: 0.5rem 1rem;
+    }
+    form span { font-size: 1.6rem; }
+    form input, form input:focus {
+      font-size: 1.3rem;
+      padding: 0.3rem;
+    }
+    form button {
+      padding: 0.3rem;
+      font-size: 1.5rem;
+    }
+  }
 </style>
