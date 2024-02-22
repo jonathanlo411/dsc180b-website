@@ -1,6 +1,22 @@
 <script lang='ts'>
   import UserCard from "$lib/client/userCard.svelte";
+	import { theme } from '$lib/stores/theme';
+	import { BROWSER } from 'esm-env';
+
+  // Student Data
+  const studentData = [
+    {name: "Jonathan Lo", pfp: "72477459", gh: "jonathanlo411"},
+    {name: "Elsie Wang", pfp: "78770687", gh: "e2wang"},
+    {name: "Flynn O'Sullivan", pfp: "62868322", gh: "fosulliv"}
+  ]
+
+  // Dark light mode
+  function toggle() {
+		const upcoming_theme = $theme.current === 'light' ? 'dark' : 'light';
+		$theme.current = upcoming_theme;
+  }
   
+  // Handle Demo Form Submit
   async function handleSubmit(e: Event) {
     const formElement = e.target as HTMLFormElement;
     const formData = new FormData(formElement);
@@ -15,11 +31,6 @@
     console.log(clean)
   }
 
-  const studentData = [
-    {name: "Jonathan Lo", pfp: "72477459", gh: "jonathanlo411"},
-    {name: "Elsie Wang", pfp: "78770687", gh: "e2wang"},
-    {name: "Flynn O'Sullivan", pfp: "62868322", gh: "fosulliv"}
-  ]
 </script>
 
 <svelte:head>
@@ -29,6 +40,18 @@
 <div id='main'>
   <!-- Main Background Splash -->
   <div id='bg' class='flex'>
+    <button
+      id='dl-div'
+      on:click={toggle}
+      aria-pressed={$theme.current === 'dark' ? 'true' : 'false'}
+      aria-label='Dark mode'
+    >
+      {#if $theme.current === 'light'}
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#FFDD21" d="M12 17q-2.075 0-3.537-1.463T7 12q0-2.075 1.463-3.537T12 7q2.075 0 3.538 1.463T17 12q0 2.075-1.463 3.538T12 17m-7-4H1v-2h4zm18 0h-4v-2h4zM11 5V1h2v4zm0 18v-4h2v4zM6.4 7.75L3.875 5.325L5.3 3.85l2.4 2.5zm12.3 12.4l-2.425-2.525L17.6 16.25l2.525 2.425zM16.25 6.4l2.425-2.525L20.15 5.3l-2.5 2.4zM3.85 18.7l2.525-2.425L7.75 17.6l-2.425 2.525z"/></svg>
+      {:else}
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#F6F1D5 " d="M12 21q-3.75 0-6.375-2.625T3 12q0-3.75 2.625-6.375T12 3q.35 0 .688.025t.662.075q-1.025.725-1.638 1.888T11.1 7.5q0 2.25 1.575 3.825T16.5 12.9q1.375 0 2.525-.613T20.9 10.65q.05.325.075.662T21 12q0 3.75-2.625 6.375T12 21"/></svg>
+      {/if}
+    </button>
     <h1>Auditing Sentiment Analysis Algorithms for Bias</h1>
     <div class="custom-shape-divider-bottom-1708623245">
       <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -54,6 +77,8 @@
   <section>
     <h2>Introduction</h2>
     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque fugit pariatur tenetur blanditiis temporibus molestiae in sit consectetur harum delectus dolorem perferendis velit quasi dicta aliquid recusandae voluptates sequi, explicabo, quia eaque deleniti sint maiores. Animi exercitationem, vitae error dignissimos fugit incidunt perspiciatis nostrum minima at quo distinctio inventore voluptate velit veritatis molestias, facere eos ea nemo in illum hic alias? Eum fuga voluptatibus ex neque, eius repudiandae, consequatur explicabo id dolor libero at maiores facilis deleniti! Consectetur fuga eveniet error reprehenderit, porro nobis voluptatum doloribus voluptatem quisquam, fugiat magni molestias illum nemo quibusdam eaque repellat autem temporibus alias at?</p>
+    <br>
+    <p>This is some text. Example link can be seen <a href="https://github.com/jonathanlo411/dsc180b-website">here</a>.</p>
   </section>
 
   <section>
@@ -126,6 +151,25 @@
   }
 
   /* Top Splash */
+  #dl-div {
+    background-color: var(--secondary);
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    padding: 0.25rem;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+    border-radius: 0 0 0 5px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 5px 10px;
+  }
+  #dl-div:hover {
+    cursor: pointer;
+    background-color: var(--primary);
+  }
   #bg {
     height: 50vh;
     background-image: url('/imgs/splash.jpeg');
@@ -139,6 +183,7 @@
   #bg h1 {
     font-weight: bold;
     font-size: 4rem;
+    color: white;
     text-shadow: 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, -2px 0 0 #000;
     margin: 5rem;
   }
