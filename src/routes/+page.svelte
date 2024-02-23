@@ -1,7 +1,21 @@
 <script lang='ts'>
+  import Information from "$lib/client/information.svelte";
   import UserCard from "$lib/client/userCard.svelte";
 	import { theme } from '$lib/stores/theme';
-	import { BROWSER } from 'esm-env';
+  import { onMount } from 'svelte';
+  import messages from '$lib/loadingMessages.json'
+
+  // Overhead
+  let results: Array<Record<string, string>>;
+  let headers: Array<string>;
+  let sentences: Array<string> = [];
+  let loading: boolean = false;
+
+  let loadText: HTMLParagraphElement;
+  let submitBt: HTMLButtonElement;
+  let loadSec: HTMLDivElement;
+  let loadingTimeout: any;
+  let lastRandomIndex: number | null;
 
   // Student Data
   const studentData = [
@@ -15,21 +29,86 @@
 		const upcoming_theme = $theme.current === 'light' ? 'dark' : 'light';
 		$theme.current = upcoming_theme;
   }
+
+  // Set Loading State
+  function toggleLoading() {
+    if (loading) {
+      submitBt.classList.remove('blocked') // Remove blocked button
+      submitBt.disabled = false; // Re-enable button
+      loadSec.style.display = 'none' // Remove loading in results
+      clearInterval(loadingTimeout) // Stop the text changing
+      loading = false;
+    } else {
+      if (results) {
+        results = []
+      }
+      submitBt.classList.add('blocked') // Block off button to prevent multiple submissions
+      submitBt.disabled = true; // Disable button
+      loadSec.style.display = 'flex' // Display results loading
+      loadingTimeout = setInterval(changeLoadingText, 1500) // Begin text changing
+      loading = true;
+    }
+  }
+  function changeLoadingText() {
+    let randomIndex = Math.floor(Math.random() * messages.length);
+    if (randomIndex === lastRandomIndex) {
+      randomIndex ++
+      lastRandomIndex = randomIndex
+    }
+    loadText.textContent = messages[randomIndex];
+  }
   
   // Handle Demo Form Submit
   async function handleSubmit(e: Event) {
-    const formElement = e.target as HTMLFormElement;
-    const formData = new FormData(formElement);
+    toggleLoading()
 
-    const url = '/api'
-    const response = await fetch( url, {
-      method: 'POST',
-      body: JSON.stringify(Object.fromEntries(formData))
-    })
-    const clean = await response.json()
+    try {
+      // Parse form data
+      const formElement = e.target as HTMLFormElement;
+      const formData = new FormData(formElement);
 
-    console.log(clean)
+      // Validating Response
+      sentences = []
+      let sentence = formData.get('sentence') as string;
+      let swap = formData.get('swap') as string;
+      if (!sentence || !sentence.includes('_')) {
+        alert('Invalid Sentence')
+        return
+      }
+      if (!swap || !swap.includes(',')) {
+        alert('Invalid Swap')
+        return
+      }
+
+      // Generate Sentences
+      swap.split(',').forEach((term) => {
+        sentences.push(sentence.trim().replace('_', term.trim()))
+      })
+
+      // Create packet to send to backend
+      const packet = {
+        queryMethod: 'bulk',
+        sentenceData: sentences
+      }
+
+      const response = await fetch('/api', {
+        method: 'POST',
+        body: JSON.stringify(packet)
+      })
+      results = (await response.json())['results']
+      headers = Object.keys(results[0])
+    } catch (e) {
+      console.log(e)
+    }
+
+    toggleLoading()
   }
+
+  onMount(() => {
+    loadText = document.querySelector('#loading p')!
+    submitBt = document.querySelector('form button')!
+    loadSec = document.querySelector('#loading')!
+  })
 
 </script>
 
@@ -111,13 +190,53 @@
   <section>
     <h2>Try it yourself!</h2>
     <form on:submit|preventDefault={handleSubmit}>
-      <span>Sentence</span>
-      <input name='sentence' type='text'>
-      <span>Swap</span>
-      <input name='swap' type='text'>
+      <div>
+        <span>Sentence</span>
+        <Information
+          hoverText="A sentence with an underscore (_). This sentence will be subject to the audit."
+        />
+      </div>
+      <input name='sentence' type='text' placeholder="Ex. The _ went to the store and bought groceries.">
+      <div>
+        <span>Swap</span>
+        <Information
+          hoverText="A comma delineated list of discrimination terms. These could be race, gender, age descriptive terms. These terms will be swapped into the template sentence above."
+        />
+      </div>
+      <input name='swap' type='text' placeholder='Ex. asian, white, mexican, black'>
       <button>Submit</button>
     </form>
   </section>
+
+  <div id='loading'>
+    <div class="loader"></div>
+    <p>Calculating model accuracy...</p>
+  </div>
+
+  {#if results && results.length !== 0}
+  <div id='results'>
+    <table>
+      <thead>
+        <tr>
+          <th>SENTENCE</th>
+          {#each headers as header}
+            <th>{header.toUpperCase()}</th>
+          {/each}
+        </tr>
+      </thead>
+      <tbody>
+        {#each results as tableEntry, i}
+          <tr>
+            <td>{sentences[i]}</td>
+            {#each Object.values(tableEntry) as value}
+              <td>{value}</td>
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+  {/if}
 
   <!-- Demo Results -->
 
@@ -238,13 +357,19 @@
     border: 1px solid var(--border);
     border-radius: 5px;
   }
+  form > div {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+  }
   form span {
     font-size: 1.4rem;
-    margin-top: 1rem;
+    margin-right: 0.5rem;
   }
   form input, form input:focus {
-    font-size: 1.2rem;
-    padding: 1%;
+    font-size: 1rem;
+    padding: 1.5%;
+    margin-top: 0.2rem;
     border-radius: 5px;
     outline: none;
   }
@@ -263,6 +388,66 @@
   form button:hover {
     background-color: var(--highlight-diff);
     cursor: pointer;
+  }
+  :global(.blocked) { opacity: 0.5; }
+  :global(.blocked:hover) { cursor: not-allowed !important; }
+
+  /* Loader */
+  #loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  .loader {
+    border: 0.25rem solid var(--secondary); 
+    border-top: 0.25rem solid var(--highlight); 
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    animation: spin 1.5s ease-in-out infinite;
+    margin: 1.6vh auto;
+    outline: white;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  #loading p {
+    font-size: 1.2rem;
+    padding-bottom: 5rem;
+  }
+
+  /* Demo Results */
+  #results {
+    width: min(95%, 1500px);
+    margin: 2rem auto;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background-color: var(--secondary);
+    overflow-x: auto;
+  }
+  :global(table) {
+    border-collapse: collapse;
+    font-size: 1rem;
+    width: 100%;
+  }
+  :global(table thead tr) {
+    background-color: var(--primary);
+    color: rgb(101, 93, 98);
+    font-weight: bold;
+    font-size: 0.7rem;
+    text-align: left;
+  }
+  :global(table th),
+  :global(table td) {
+    padding: 0.4rem;
+  }
+  :global(table tbody tr) {
+    border-bottom: 1px solid var(--border);
+  }
+  :global(table tbody tr:hover) {
+    background-color: var(--primary);
   }
 
   /* Mobile View */

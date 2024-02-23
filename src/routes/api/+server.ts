@@ -18,12 +18,26 @@ export async function POST({ request }){
 
   // Make request
   const url = `https://dsc180ba14.pythonanywhere.com/api/${requestData['queryMethod']}`
+  // const url = `http://127.0.0.1:5000//api/${requestData['queryMethod']}`
   let res: Response;
   if (requestData['queryMethod'] === 'single') {
-    res = await fetch(url, {body: JSON.stringify({sentence: requestData['sentenceData']})})
+    res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({sentence: requestData['sentenceData']}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
   } else {
-    res = await fetch(url, {body: JSON.stringify({sentences: requestData['sentenceData']})})
+    res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({sentences: requestData['sentenceData']}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
   }
-
-  return json({"scores": res})
+  let cleanData = await res.json()
+  
+  return json(cleanData)
 }

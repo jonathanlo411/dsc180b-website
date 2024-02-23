@@ -69,5 +69,6 @@
     font-family: 'Montserrat';
     color: var(--font-color);
     background-color: var(--primary);
+    transition: 0.3s;
   }
 </style>
