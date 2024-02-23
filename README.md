@@ -1,4 +1,4 @@
-# DSC180B Website
+# DSC180B Website <a  href="https://github.com/jonathanlo411/dsc180b-website/releases"><img  src="https://img.shields.io/github/v/release/jonathanlo411/dsc180b-website"></a><a  href="https://github.com/jonathanlo411/dsc180b-website/blob/main/LICENSE"><img  src="https://img.shields.io/github/license/jonathanlo411/dsc180b-website"></a>
 Website for DSC180B. Project details can be found at the [DSC180B repo](https://github.com/jonathanlo411/dsc180b/).
 
 ## Local Usage
