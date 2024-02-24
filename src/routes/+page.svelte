@@ -4,7 +4,8 @@
 	import { theme } from '$lib/stores/theme';
   import LinkCard from "$lib/client/linkCard.svelte";
   import { onMount } from 'svelte';
-  import messages from '$lib/loadingMessages.json'
+  import messages from '$webconfig/loadingMessages.json'
+  import pageConfig from '$webconfig/pageConfig.json'
 
   // Overhead
   let results: Array<Record<string, string>>;
@@ -18,21 +19,9 @@
   let loadingTimeout: any;
   let lastRandomIndex: number | null;
 
-  // Student Data
-  const studentData = [
-    {name: "Jonathan Lo", pfp: "72477459", gh: "jonathanlo411"},
-    {name: "Elsie Wang", pfp: "78770687", gh: "e2wang"},
-    {name: "Flynn O'Sullivan", pfp: "62868322", gh: "fosulliv"}
-  ]
-
-  // Links Data
-  const linksData = [
-    {"title": "Project Report", "link": "/"},
-    {"title": "Project Code", "link": "https://github.com/jonathanlo411/dsc180b"},
-    {"title": "Website Code", "link": "https://github.com/jonathanlo411/dsc180b-website"},
-    {"title": "ML-API Endpoint", "link": "https://dsc180ba14.pythonanywhere.com/"},
-    {"title": "ML-API Code", "link": "https://github.com/jonathanlo411/semanticometer-api"}
-  ]
+  // Load Page Data
+  const studentData = pageConfig['studentData']
+  const linksData = pageConfig['linksData']
 
   // Dark light mode
   function toggle() {
