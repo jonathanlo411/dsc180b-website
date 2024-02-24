@@ -1,6 +1,7 @@
 <script lang='ts'>
   import { onMount } from 'svelte';
   import { theme } from '$lib/stores/theme'; 
+  import Analytics from '$lib/client/analytics.svelte';
 
   // Subscribe to theme updates
   onMount(() => {
@@ -31,6 +32,8 @@
   });
 
 </script>
+
+<Analytics />
 <div id="base">
   <slot></slot>
 </div>
