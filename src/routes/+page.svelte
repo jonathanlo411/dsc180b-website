@@ -2,6 +2,7 @@
   import Information from "$lib/client/information.svelte";
   import UserCard from "$lib/client/userCard.svelte";
 	import { theme } from '$lib/stores/theme';
+  import LinkCard from "$lib/client/linkCard.svelte";
   import { onMount } from 'svelte';
   import messages from '$lib/loadingMessages.json'
 
@@ -22,6 +23,15 @@
     {name: "Jonathan Lo", pfp: "72477459", gh: "jonathanlo411"},
     {name: "Elsie Wang", pfp: "78770687", gh: "e2wang"},
     {name: "Flynn O'Sullivan", pfp: "62868322", gh: "fosulliv"}
+  ]
+
+  // Links Data
+  const linksData = [
+    {"title": "Project Report", "link": "/"},
+    {"title": "Project Code", "link": "https://github.com/jonathanlo411/dsc180b"},
+    {"title": "Website Code", "link": "https://github.com/jonathanlo411/dsc180b-website"},
+    {"title": "ML-API Endpoint", "link": "https://dsc180ba14.pythonanywhere.com/"},
+    {"title": "ML-API Code", "link": "https://github.com/jonathanlo411/semanticometer-api"}
   ]
 
   // Dark light mode
@@ -213,6 +223,7 @@
     <p>Calculating model accuracy...</p>
   </div>
 
+  <!-- Demo Results -->
   {#if results && results.length !== 0}
   <div id='results'>
     <table>
@@ -238,16 +249,25 @@
   </div>
   {/if}
 
-  <!-- Demo Results -->
-
+  <!-- Links -->
   <section>
+    <h2>Relevant Links</h2>
+    <p>The following contains links to our project, report, and relevant code.</p>
+    <div id='link-row'>
+      {#each linksData as link}
+        <LinkCard {...link} />
+      {/each}
+    </div>
+  </section>
+
+  <!-- <section>
     <h2>Sample Section</h2>
     <p>This is some text. Example link can be seen <a href="https://github.com/jonathanlo411/dsc180b-website">here</a>.</p>
     <div class='flex subheading'>
       <img src='https://phil174.lojot.com/data/fig3.png' alt='alt text'>
       <span>Figure 3. Example of figure showing subheading</span>
     </div>
-  </section>
+  </section> -->
 
 </div>
 
@@ -450,6 +470,14 @@
     background-color: var(--primary);
   }
 
+  /* Relevant Links */
+  #link-row {
+    display: grid;
+    margin: 0.5rem auto;
+    grid-template-columns: repeat(3, 33%);
+    grid-auto-rows: 0.5fr;
+  }
+
   /* Mobile View */
   @media only screen and (max-width: 1000px) {
     /* Rework Main Styles */
@@ -486,6 +514,14 @@
     form button {
       padding: 0.3rem;
       font-size: 1.5rem;
+    }
+
+    /* Rework */
+    #link-row {
+      display: grid;
+      margin: 0.5rem auto;
+      grid-template-columns: repeat(1, 100%);
+      grid-auto-rows: 0.5fr;
     }
   }
 </style>
