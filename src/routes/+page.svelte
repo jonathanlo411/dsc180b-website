@@ -13,6 +13,9 @@
   let sentences: Array<string> = [];
   let loading: boolean = false;
 
+  let sentenceInput: HTMLInputElement;
+  let swapInput: HTMLInputElement;
+
   let loadText: HTMLParagraphElement;
   let submitBt: HTMLButtonElement;
   let loadSec: HTMLDivElement;
@@ -22,6 +25,7 @@
   // Load Page Data
   const studentData = pageConfig['studentData']
   const linksData = pageConfig['linksData']
+  const presets = pageConfig['presets']
 
   // Dark light mode
   function toggle() {
@@ -103,10 +107,18 @@
     toggleLoading()
   }
 
+  // Load Presets
+  function loadPreset(presetData: Record<string, string>) {
+    sentenceInput.value = presetData['sentence']
+    swapInput.value = presetData['swap']
+  }
+
   onMount(() => {
     loadText = document.querySelector('#loading p')!
     submitBt = document.querySelector('form button')!
     loadSec = document.querySelector('#loading')!
+    sentenceInput = document.querySelector('input[name="sentence"]')!
+    swapInput = document.querySelector('input[name="swap"]')!
   })
 
 </script>
@@ -135,9 +147,9 @@
     <h1>Auditing Sentiment Analysis Algorithms for Bias</h1>
     <div class="custom-shape-divider-bottom-1708623245">
       <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-          <path d="M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z" class="shape-fill"></path>
+        <path d="M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z" class="shape-fill"></path>
       </svg>
-  </div>
+    </div>
   </div>
 
   <!-- Student/Instructor Cards -->
@@ -152,6 +164,17 @@
     pfp='4693439'
     gh='staeiou'
   /></div>
+
+  <!-- Links -->
+  <section>
+    <h2>Relevant Links</h2>
+    <p>The following contains links to our project, report, and relevant code.</p>
+    <div id='link-row'>
+      {#each linksData as link}
+        <LinkCard {...link} />
+      {/each}
+    </div>
+  </section>
 
   <!-- Main Paper Content -->
   <section>
@@ -188,6 +211,12 @@
   <!-- Demo/Try it yourself -->
   <section>
     <h2>Try it yourself!</h2>
+    <p>Feel free to test the models yourself or try one of our presets!</p>
+    <div id="presetRow">
+      {#each Object.entries(presets) as [presetTitle, presetData]}
+        <button on:click={() => loadPreset(presetData)}>{presetTitle}</button>
+      {/each}
+    </div>
     <form on:submit|preventDefault={handleSubmit}>
       <div>
         <span>Sentence</span>
@@ -202,7 +231,7 @@
           hoverText="A comma delineated list of discrimination terms. These could be race, gender, age descriptive terms. These terms will be swapped into the template sentence above."
         />
       </div>
-      <input name='swap' type='text' placeholder='Ex. asian, white, mexican, black'>
+      <input name='swap' type='text' placeholder='Ex. black man, white man, black woman, white woman'>
       <button>Submit</button>
     </form>
   </section>
@@ -237,17 +266,6 @@
     </table>
   </div>
   {/if}
-
-  <!-- Links -->
-  <section>
-    <h2>Relevant Links</h2>
-    <p>The following contains links to our project, report, and relevant code.</p>
-    <div id='link-row'>
-      {#each linksData as link}
-        <LinkCard {...link} />
-      {/each}
-    </div>
-  </section>
 
   <!-- <section>
     <h2>Sample Section</h2>
@@ -355,16 +373,41 @@
   }
 
   /* Demo */
+  #presetRow {
+    background-color: var(--secondary);
+    width: 50%;
+    margin: 2rem auto 0;
+    border: 1px solid var(--border);
+    border-radius: 5px 5px 0 0;
+    overflow-x: auto;
+    white-space: nowrap; 
+  }
+  #presetRow button {
+    background-color: var(--primary);
+    border: none;
+    color: var(--font-color);
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    transition: 0.3s;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+  }
+  #presetRow button:hover {
+    cursor: pointer;
+    background-color: var(--secondary);
+  }
   form {
     background-color: var(--secondary);
     padding: 1rem 2rem;
     width: 50%;
-    margin: 1rem auto;
+    margin: 0 auto 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     border: 1px solid var(--border);
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
   }
   form > div {
     margin-top: 1rem;
@@ -491,6 +534,9 @@
     }
 
     /* Demo */
+    #presetRow {
+      width: 100%;
+    }
     form {
       width: 100%;
       padding: 0.5rem 1rem;

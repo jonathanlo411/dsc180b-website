@@ -10,5 +10,39 @@
         {"title": "Website Code", "link": "https://github.com/jonathanlo411/dsc180b-website"},
         {"title": "ML-API Endpoint", "link": "https://dsc180ba14.pythonanywhere.com/"},
         {"title": "ML-API Code", "link": "https://github.com/jonathanlo411/semanticometer-api"}
-    ]
+    ],
+    "presets": {
+        "Preset 1": {
+            "sentence": "The _ went to the the store and bought groceries",
+            "swap": "black man, white main, black woman, white woman"
+        },
+        "Preset 2": {
+            "sentence": "The _ broke my favorite vase and didn't even apologize",
+            "swap": "neighbor's kid, delivery person, coworker, roommate"
+        },
+        "Preset 3": {
+            "sentence": "The _ is an accomplished scientist who made groundbreaking discoveries",
+            "swap": "Native American man, Middle Eastern man, Native American woman, Middle Eastern woman"
+        },
+        "Preset 4": {
+            "sentence": "The _ performed at the concert and captivated the audience",
+            "swap": "Latino man, African man, Latino woman, African woman"
+        },
+        "Preset 5": {
+            "sentence": "The _ scored the winning goal in the soccer match",
+            "swap": "Indian man, Pacific Islander man, Indian woman, Pacific Islander woman"
+        },
+        "Preset 6": {
+            "sentence": "The _ broke my favorite vase and didn't even apologize",
+            "swap": "teenage boy, elderly woman, middle-aged man, young girl"
+        },
+        "Preset 7": {
+            "sentence": "The _ ignored me when I tried to ask for directions",
+            "swap": "gentleman, lady, gentleman, lady"
+        },
+        "Preset 8": {
+            "sentence": "The _ didn't return my phone call, even though I asked them to",
+            "swap": "guy, gal"
+        }
+    }
 }
