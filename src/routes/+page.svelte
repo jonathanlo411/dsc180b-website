@@ -1,9 +1,12 @@
 <script lang='ts'>
   import Information from "$lib/client/information.svelte";
   import UserCard from "$lib/client/userCard.svelte";
-	import { theme } from '$lib/stores/theme';
+  import BarChart from '$lib/client/barChart.svelte';
   import LinkCard from "$lib/client/linkCard.svelte";
+
+	import { theme } from '$lib/stores/theme';
   import { onMount } from 'svelte';
+
   import messages from '$webconfig/loadingMessages.json'
   import pageConfig from '$webconfig/pageConfig.json'
 
@@ -12,6 +15,7 @@
   let headers: Array<string>;
   let sentences: Array<string> = [];
   let loading: boolean = false;
+  let splitSwap: Array<string>;
 
   let sentenceInput: HTMLInputElement;
   let swapInput: HTMLInputElement;
@@ -84,7 +88,8 @@
       }
 
       // Generate Sentences
-      swap.split(',').forEach((term) => {
+      splitSwap = swap.split(',');
+      splitSwap.forEach((term) => {
         sentences.push(sentence.trim().replace('_', term.trim()))
       })
 
@@ -100,9 +105,11 @@
       })
       results = (await response.json())['results']
       headers = Object.keys(results[0])
+
     } catch (e) {
       console.log(e)
     }
+
 
     toggleLoading()
   }
@@ -243,27 +250,30 @@
 
   <!-- Demo Results -->
   {#if results && results.length !== 0}
-  <div id='results'>
-    <table>
-      <thead>
-        <tr>
-          <th>SENTENCE</th>
-          {#each headers as header}
-            <th>{header.toUpperCase()}</th>
-          {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each results as tableEntry, i}
+  <div id='results-wrap'>
+    <div id='results'>
+      <table>
+        <thead>
           <tr>
-            <td>{sentences[i]}</td>
-            {#each Object.values(tableEntry) as value}
-              <td>{value}</td>
+            <th>SENTENCE</th>
+            {#each headers as header}
+              <th>{header.toUpperCase()}</th>
             {/each}
           </tr>
-        {/each}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {#each results as tableEntry, i}
+            <tr>
+              <td>{sentences[i]}</td>
+              {#each Object.values(tableEntry) as value}
+                <td>{value}</td>
+              {/each}
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+    <BarChart {results} {headers} sentences={splitSwap} />
   </div>
   {/if}
 
@@ -471,9 +481,11 @@
   }
 
   /* Demo Results */
-  #results {
+  #results-wrap {
     width: min(95%, 1500px);
     margin: 2rem auto;
+  }
+  #results {
     border: 1px solid var(--border);
     border-radius: 5px;
     background-color: var(--secondary);

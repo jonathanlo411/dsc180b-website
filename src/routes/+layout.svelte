@@ -12,19 +12,19 @@
           root.style.setProperty('--primary', '#2a2729');
           root.style.setProperty('--secondary', '#302c2e');
           root.style.setProperty('--border', 'rgb(55,52,59)');
-          root.style.setProperty('--highlight', 'rgb(212, 107, 169)');
+          root.style.setProperty('--highlight', '#d46ba9');
           root.style.setProperty('--highlight-diff', 'rgb(185, 95, 149)');
           root.style.setProperty('--fastest', 'rgb(174, 62, 201)');
-          root.style.setProperty('--font-color', 'white');
+          root.style.setProperty('--font-color', '#ffffff');
           root.style.setProperty('--subdued', 'rgb(101, 93, 98)');
         } else {
           root.style.setProperty('--primary', '#ffffff');
           root.style.setProperty('--secondary', 'hsl(325, 55%, 97%');
           root.style.setProperty('--border', 'rgb(55,52,59)');
-          root.style.setProperty('--highlight', 'rgb(212, 107, 169)');
+          root.style.setProperty('--highlight', '#d46ba9');
           root.style.setProperty('--highlight-diff', 'rgb(185, 95, 149)');
           root.style.setProperty('--fastest', 'rgb(174, 62, 201)');
-          root.style.setProperty('--font-color', 'black'); // Change this if needed
+          root.style.setProperty('--font-color', '#000000'); // Change this if needed
           root.style.setProperty('--subdued', 'rgb(101, 93, 98)');
         }
       }
