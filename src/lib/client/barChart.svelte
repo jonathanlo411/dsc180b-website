@@ -55,7 +55,6 @@
 
     const gradStart = getComputedStyle(document.documentElement).getPropertyValue('--highlight');
     const gradEnd = getComputedStyle(document.documentElement).getPropertyValue('--font-color');
-    console.log(gradEnd)
     
     const data = {
       labels: headers,
@@ -70,7 +69,7 @@
       type: 'bar',
       data: data,
       options: {
-        maintainAspectRatio: false,
+        maintainAspectRatio: window.innerWidth > 1000,
         plugins: {
           title: {
             display: true,
