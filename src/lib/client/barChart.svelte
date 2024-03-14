@@ -70,6 +70,7 @@
       type: 'bar',
       data: data,
       options: {
+        maintainAspectRatio: false,
         plugins: {
           title: {
             display: true,
@@ -99,9 +100,19 @@
   });
 </script>
 
-<canvas id="barChart" />
+<div>
+  <canvas id="barChart" />
+</div>
 
 <style>
+  
+  @media only screen and (max-width: 1000px) {
+    div {
+      position: relative;
+      height: 400px;
+    }
+  }
+
   canvas {
     background-color: white;
     margin-top: 2rem;
