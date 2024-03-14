@@ -68,6 +68,10 @@
   // Handle Demo Form Submit
   async function handleSubmit(e: Event) {
     toggleLoading()
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    })
 
     try {
       // Parse form data
@@ -109,7 +113,6 @@
     } catch (e) {
       console.log(e)
     }
-
 
     toggleLoading()
   }
