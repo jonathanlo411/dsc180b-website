@@ -5,7 +5,7 @@
         {"name": "Flynn O'Sullivan", "pfp": "62868322", "gh": "fosulliv"}
     ],
     "linksData": [
-        {"title": "Project Report", "link": "/"},
+        {"title": "Project Report", "link": "https://dsc180b.lojot.com/report.pdf"},
         {"title": "Project Code", "link": "https://github.com/jonathanlo411/dsc180b"},
         {"title": "Website Code", "link": "https://github.com/jonathanlo411/dsc180b-website"},
         {"title": "ML-API Endpoint", "link": "https://dsc180ba14.pythonanywhere.com/"},

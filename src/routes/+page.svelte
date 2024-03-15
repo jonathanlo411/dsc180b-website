@@ -68,6 +68,10 @@
   // Handle Demo Form Submit
   async function handleSubmit(e: Event) {
     toggleLoading()
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    })
 
     try {
       // Parse form data
@@ -109,7 +113,6 @@
     } catch (e) {
       console.log(e)
     }
-
 
     toggleLoading()
   }
@@ -186,33 +189,50 @@
   <!-- Main Paper Content -->
   <section>
     <h2>Introduction</h2>
-    <p>As the volume of data and internet users continues to rise, companies are faced with the challenge of effectively managing and maintaining safe content on digital platforms. The ubiquity of online interactions has prompted the adoption of sentiment analysis models on a vast amount of posts and comments to discern their toxicity levels. For instance, the New York Times, FoxNews, and other major newspapers use Google's Perspective API to moderate comments of articles for toxicity while VADER and TextBlob stand out as one of the largest and highly used sentimental analysis models in higher education and research. Yet, the inherent opacity of these algorithms raises critical questions about the criteria that defines toxicity and the potential biases hidden within them. This paper aims to address this question by evaluating the fairness of TextBlob, VADER, and Perspective API with self-identifying features such as race and gender. Our hypothesis states that these models are unbiased, and by using sentences that include race and gender terms and seeing how these models assign sentiment by changing these terms, we hope to gain more insight into how these models work.</p>
-    <br>
+    <p>In today's digital landscape, the management of online content has become increasingly reliant on sophisticated tools such as sentiment analysis models, including TextBlob, VADER, and Perspective API. However, growing concerns about potential biases within these models, particularly in relation to race and gender, have sparked the need for a comprehensive investigation. Building upon previous studies, such as Sweeney (2013) and Kiritchenko and Mohammad (2018), which have shed light on biases in algorithmic decision-making, this paper endeavors to assess the fairness of TextBlob, VADER, and Perspective API in assigning sentiment. Specifically, we aim to scrutinize their treatment of self-identifying features like race and gender. By adopting methodologies akin to prior research but with a distinct dataset, our objective is to determine whether biases identified in earlier studies persist within these widely-utilized sentiment analysis models.</p>
+    <br><br>
+    <p>However, what is a sentiment analysis algorithm? Put simply, a sentiment analysis algorithm is a tool designed to read text and discern the writer's feelings and opinions. These algorithms follow a structured process, which can be broken down into several key steps. First, the algorithm reads the text, comprehending the words, phrases, and context therein. Next, it assesses the sentiment of the text, categorizing words as positive, negative, or neutral. For instance, words like "love" typically convey positivity, while "boring" tends to evoke negativity. Subsequently, the algorithm aggregates this sentiment information to determine the overall sentiment of the text. Finally, the algorithm produces its output, often in the form of a numerical value on a scale from -1 to 1, indicating the intensity and direction of sentiment.</p>
   </section>
 
   <section>
     <h2>Data Review</h2>
-    <p>For our dataset, we curated 152 template sentences explicitly mentioning a gender and race. The racial categories include Asian, white, and black, while gender includes female and male. Each sentence is accompanied by labels of 1, 0, and -1 to indicate whether they have positive, neutral, or negative sentiment, respectively.  There are a total of 63 positive sentences, 47 neutral sentences, and 42 negative sentences. 
+    <p>Our dataset comprises 152 template sentences, each explicitly mentioning both gender and race. Racial categories include Asian, white, and black, while gender encompasses female and male identities. These sentences are meticulously labeled with sentiment scores: 1 for positive, 0 for neutral, and -1 for negative sentiment. The distribution of sentiments is as follows: 63 positive, 47 neutral, and 42 negative sentences.</p>
     <br><br>
-    To introduce diversity in sentence style and structure, we had three different student researchers write sentences and label them with each sentence being checked by another student. Additionally, sentences were crafted in a more complex and descriptive manner to push the boundaries of each sentiment analysis model.  This approach reflects the real-world where comments and content exhibit varied complexity. This deliberate choice enhances the robustness of our dataset, allowing for a comprehensive evaluation of sentiment analysis algorithms. The following shows some examples of a positive, neutral, and negative sentence:
-    </p>
+    <p>To ensure diversity, sentences were crafted by different students and cross-checked by another student. This collaborative effort aimed to incorporate a wide range of perspectives and minimize biases in the dataset.</p>
+    <br><br>
+    <p>Furthermore, sentences were crafted to be complex and descriptive, mimicking real-world comments and content. This approach enhances the dataset's robustness and reflective capabilities. Illustrative examples of positive, neutral, and negative sentences are provided to showcase the dataset's variation and complexity.</p>
   </section>
 
   <section>
     <h2>Methods</h2>
-    <p>By default, the sentences in the dataset do not have slots to easily inject race and gender pronouns. To rectify this, functions utilizing text processing package Spacy were created in order to process each sentence down into basic structures. For example, the sentence "A white woman experienced a neutral day, neither exceptionally positive nor negative, as she navigated the routine tasks of her daily life" would be transformed into "A []  experienced a neutral day, neither exceptionally positive nor negative, as "subject" navigated the routine tasks of "possive adjective" daily life".
+    <p>Data processing was conducted using the Spacy text processing package to parse each sentence into basic structures, facilitating the injection of race and gender pronouns into the sentences. For instance, a sentence like "A white woman experienced a neutral day..." would be transformed into a template with slots for race and gender.</p>
     <br><br>
-    To alter these sentence structures into audit-ready samples, some transformations would need to be applied. The function "fill_race_gender" was utilized to analyze the slots within the sentences and replace them with the provided identity. Subsequently, these sentences were compiled into a DataFrame containing data such as the original sentence sentiment and the number of pronouns.
+    <p>This streamlined process allowed for the replacement of these slots with specific identities, generating audit-ready samples. These samples were then compiled into a DataFrame containing the original sentence sentiment and pronoun counts.</p>
     <br><br>
-    In order to audit the models, a simplified process for querying them is necessary. For this process, a dedicated "modelCollection" file was created. inside this file, TextBlob and vaderSentiment were simply imported. Perspective API was setup using the Google's Python API Client. To utilize all of this in a straightforward method, a "ModelCollection" class was created with methods to single and bulk query all of the models.</p>
+    <p>For model auditing, a simplified querying process was developed utilizing native APIs. Specifically, a dedicated "modelCollection" file was created, which included imports for TextBlob and vaderSentiment. Additionally, the Perspective API was set up using Google's Python API Client. To simplify the utilization of these resources, a "ModelCollection" class was created with methods for both single and bulk querying of all models.</p>
+  </section>
+
+  <section>
+    <h2>Findings</h2>
+    <p>In our investigation of three sentiment analysis algorithms—TextBlob, VADER, and Google's Perspective API—we found evidence of bias in their treatment of race and gender within text. Despite our initial hypothesis of unbiased behavior, disparities emerged in sentiment scoring across different racial and gender groups. Specifically, sentences mentioning individuals of Asian descent tended to receive lower sentiment scores, while those referencing females were more likely to be assigned negative sentiment scores. These findings highlight the presence of nuanced biases within the algorithms, emphasizing the need for continued scrutiny and evaluation to ensure fairness and equity.</p>
+    <br><br>
+    <p>Interestingly, we observed variations in the magnitude and direction of bias among the three models. TextBlob exhibited a tendency towards more negative sentiment scores for certain demographic groups, while VADER displayed fluctuations in sentiment scoring. Google's Perspective API demonstrated a relatively lower level of bias compared to the other models. These differences underscore the importance of algorithmic transparency and further research into mitigating bias in sentiment analysis algorithms. Addressing these biases is crucial for fostering inclusive and equitable digital environments as sentiment analysis algorithms continue to play a significant role in content moderation and decision-making processes.</p>
+    <br><br>
+    <p>Furthermore, our analyses using one- and two-way ANOVA tests provided additional insights into the interaction between sentiment analysis algorithms, race, and gender. Despite the absence of statistically significant differences in sentiment scores between gender identities according to all models, there were noteworthy distinctions in sentiment perception across racial categories. These disparities suggest that race may play a more influential role than gender in shaping sentiment perception within text, a finding warranting further investigation and consideration in algorithm development and deployment.</p>
+    <div class='flex subheading'>
+      <img src='/imgs/dsc180b_visual1.png' alt='bar chart of average differences in model scoring'>
+      <span>Figure 1. Average Differences in Model Scoring</span>
+    </div>
+    <p>The bar charts presented in the figure illustrate the average difference in sentiment scores across various demographic identifiers as analyzed by different sentiment analysis algorithms. To clarify the concept of "average difference," an example is provided using a sample sentence: "The _, after a long week of work, felt drained but was excited for the weekend to come." Initially scored at 0.031 by the Perspective API, inserting an identifier like "black woman" into the placeholder results in a higher score of 0.097, indicating a perception of increased toxicity by the algorithm. The average difference is obtained by subtracting these scores and calculating the average across all 152 sentences, encompassing all demographic identifiers and sentiment analysis algorithms.</p>
   </section>
 
   <section>
     <h2>Discussion</h2>
-    <p>
-      In our investigation of three sentiment analysis algorithms—TextBlob, VADER, and Google's Perspective API—we found evidence of bias in their treatment of race and gender within text. Despite our initial hypothesis of unbiased behavior, disparities emerged in sentiment scoring across different racial and gender groups. Specifically, sentences mentioning individuals of Asian descent tended to receive lower sentiment scores, while those referencing females were more likely to be assigned negative sentiment scores. These findings highlight the presence of nuanced biases within the algorithms, emphasizing the need for continued scrutiny and evaluation to ensure fairness and equity.
-      <br><br>
-      Interestingly, we observed variations in the magnitude and direction of bias among the three models. TextBlob exhibited a tendency towards more negative sentiment scores for certain demographic groups, while VADER displayed fluctuations in sentiment scoring. Google's Perspective API demonstrated a relatively lower level of bias compared to the other models. These differences underscore the importance of algorithmic transparency and further research into mitigating bias in sentiment analysis algorithms. Addressing these biases is crucial for fostering inclusive and equitable digital environments as sentiment analysis algorithms continue to play a significant role in content moderation and decision-making processes.</p>
+    <p>In reflecting on our study, there are several aspects that could be refined or approached differently in future iterations. Firstly, during the data collection process, utilizing core data sources such as newspaper headlines could potentially offer a more representative and diverse dataset. Additionally, rather than relying solely on programmatically substituting race and gender terms using tools like Spacy, a more meticulous approach involving manual insertion of substitutions could enhance the accuracy and granularity of the dataset.</p>
+    <br><br>
+    <p>Moving forward, it is essential to delve deeper into understanding the underlying factors contributing to the disparities observed among sentiment analysis models. Investigating the root causes of these differences could shed light on potential biases inherent within the algorithms or the datasets themselves, thereby informing strategies for improving algorithmic fairness and equity.</p>
+    <br><br>
+    <p>It is worth noting that the reproducibility of this study remains intact, as all code within the associated notebooks in the repository can be rerun to replicate the findings. This ensures transparency and enables other researchers to validate our results and build upon our findings in future studies.</p>
   </section>
 
   <!-- Demo/Try it yourself -->

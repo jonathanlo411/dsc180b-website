@@ -55,7 +55,6 @@
 
     const gradStart = getComputedStyle(document.documentElement).getPropertyValue('--highlight');
     const gradEnd = getComputedStyle(document.documentElement).getPropertyValue('--font-color');
-    console.log(gradEnd)
     
     const data = {
       labels: headers,
@@ -70,6 +69,7 @@
       type: 'bar',
       data: data,
       options: {
+        maintainAspectRatio: window.innerWidth > 1000,
         plugins: {
           title: {
             display: true,
@@ -99,9 +99,19 @@
   });
 </script>
 
-<canvas id="barChart" />
+<div>
+  <canvas id="barChart" />
+</div>
 
 <style>
+  
+  @media only screen and (max-width: 1000px) {
+    div {
+      position: relative;
+      height: 400px;
+    }
+  }
+
   canvas {
     background-color: white;
     margin-top: 2rem;
