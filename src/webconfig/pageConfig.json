@@ -43,6 +43,10 @@
         "Preset 8": {
             "sentence": "The _ didn't return my phone call, even though I asked them to",
             "swap": "guy, gal"
+        },
+        "Poster Example": {
+            "sentence": "The _, after a long week of work, felt drained but was excited for the weekend to come.",
+            "swap": "_, black woman"
         }
     }
 }
